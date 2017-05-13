@@ -1,5 +1,5 @@
 // Problem described here: https://www.techiedelight.com/lee-algorithm-shortest-path-in-a-maze/
-import Queue from 'queue';
+let { Queue } = require('./queue.js');
 
 function path(start, end, maze) {
   let q = new Queue();
@@ -7,31 +7,30 @@ function path(start, end, maze) {
 
   // Enqueue tuples where first val is position and second val is distance from start
   q.enq([start, 0]);
+  seen[stringify(start)] = true;
 
   while (q.length > 0) {
-    let [pos, dist] = q.deq;
-    seen[stringify(pos)] = true;
+    let [pos, dist] = q.deq();
 
-    DELTAS.forEach(delta => {
-      let nextPos = delta(pos);
-      if (valid(nextPos)) {
-        if (nextPos === end) { return dist + 1; }
-        q.enq([pos, dist + 1]);
+    for (let i in DELTAS) {
+      let nextPos = DELTAS[i](pos);
+      if (valid(nextPos, maze, seen)) {
+        if (isEnd(nextPos, end)) { return dist + 1; }
+        q.enq([nextPos, dist + 1]);
+        seen[stringify(nextPos)] = true;
       }
-    });
+    }
   }
 
   return null;
 }
 
+function isEnd(pos, end) { return stringify(pos) === stringify(end); }
+
 function stringify([x, y]) { return `x${x}y${y}`; }
 
 function valid([x, y], maze, seen) {
-  if (y >= 0 && y < maze.length && maze[y][x] === 1 && !seen[stringify([x, y])]) {
-    return true;
-  } else {
-    return false;
-  }
+  return y >= 0 && y < maze.length && maze[y][x] === 1 && !seen[stringify([x, y])];
 }
 
 const DELTAS = [
