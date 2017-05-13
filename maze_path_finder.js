@@ -1,5 +1,28 @@
 // Problem described here: https://www.techiedelight.com/lee-algorithm-shortest-path-in-a-maze/
+import Queue from 'queue';
 
+function path(start, end, maze) {
+  let q = new Queue();
+  let seen = {};
+
+  // Enqueue tuples where first val is position and second val is distance from start
+  q.enq([start, 0]);
+
+  while (q.length > 0) {
+    let [pos, dist] = q.deq;
+    seen[stringify(pos)] = true;
+
+    DELTAS.forEach(delta => {
+      let nextPos = delta(pos);
+      if (valid(nextPos)) {
+        if (nextPos === end) { return dist + 1; }
+        q.enq([pos, dist + 1]);
+      }
+    });
+  }
+
+  return null;
+}
 
 function stringify([x, y]) { return `x${x}y${y}`; }
 
