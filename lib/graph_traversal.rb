@@ -20,6 +20,7 @@ def bfs_undirected(root, val)
   nil
 end
 
+
 def dfs_undirected(root, val, seen = Set.new)
   return root if root.val == val
   seen.add(root)
@@ -34,6 +35,7 @@ def dfs_undirected(root, val, seen = Set.new)
 
   nil
 end
+
 
 def dfs_directed(root, val, seen = Set.new)
   return root if root.val == val
@@ -50,18 +52,15 @@ def dfs_directed(root, val, seen = Set.new)
   nil
 end
 
+
 def dfs_topological_sort(vertices, seen = Set.new, sorted = [])
   return sorted if vertices.empty?
-
   vertices.each do |vertex|
     next if seen.include?(vertex)
     seen.add(vertex)
     neighbors = []
     vertex.out_edges.each do |edge|
-      neighbor = edge.to_vertex
-      if !seen.include?(neighbor)
-        neighbors << neighbor
-      end
+      neighbors << edge.to_vertex if !seen.include?(edge.to_vertex)
     end
 
     dfs_topological_sort(neighbors, seen, sorted)
@@ -70,6 +69,27 @@ def dfs_topological_sort(vertices, seen = Set.new, sorted = [])
 
   sorted
 end
+
+
+def bfs_topological_sort(vertices)
+  sorted = []
+  q = Queue.new
+  vertices = vertices.dup
+
+  until vertices.empty?
+    vertices.each { |v| q.enq(v) if v.in_edges.empty? }
+
+    until q.empty?
+      vertex = q.deq
+      sorted << vertices.delete(vertex)
+      # as each first out_edge is destroyed a new one shifts to first index
+      vertex.out_edges.length.times { vertex.out_edges.first.destroy! }
+    end
+  end
+
+  sorted
+end
+
 
 
 # For directed graphs only

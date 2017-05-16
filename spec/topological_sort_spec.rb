@@ -17,7 +17,7 @@ describe 'TopologicalSort' do
     Edge.new(v3, v4)
   end
 
-  it "sorts the vertices" do
+  it "sorts the vertices using dfs" do
     solutions = [
       [v1, v2, v3, v4],
       [v1, v3, v2, v4]
@@ -25,6 +25,17 @@ describe 'TopologicalSort' do
 
     1.times do
       expect(solutions).to include(dfs_topological_sort(vertices.shuffle))
+    end
+  end
+
+  it "sorts the vertices using bfs" do
+    solutions = [
+      [v1, v2, v3, v4],
+      [v1, v3, v2, v4]
+    ]
+
+    1.times do
+      expect(solutions).to include(bfs_topological_sort(vertices.shuffle))
     end
   end
 end

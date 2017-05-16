@@ -28,5 +28,6 @@ class Edge
     @from_vertex = nil
     @to_vertex.in_edges.delete(self)
     @to_vertex = nil
+    self
   end
 end
