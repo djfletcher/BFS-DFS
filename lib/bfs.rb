@@ -1,4 +1,3 @@
-require './undirected_graph'
 require 'set'
 
 def bfs(root, val)
