@@ -5,8 +5,8 @@ describe Vertex do
   describe '#initialize' do
     subject(:vertex) { Vertex.new(7) }
 
-    it 'stores a value' do
-      expect(vertex.value).to eq(7)
+    it 'stores a val' do
+      expect(vertex.val).to eq(7)
     end
 
     it 'initially sets in_edges as an empty array' do

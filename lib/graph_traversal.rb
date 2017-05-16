@@ -1,6 +1,6 @@
 require 'set'
 
-def bfs(root, val)
+def bfs_undirected(root, val)
   return root if root.val == val
   seen = Set.new
   q = Queue.new
@@ -19,14 +19,31 @@ def bfs(root, val)
   nil
 end
 
-def dfs(root, val, seen = Set.new)
+def dfs_undirected(root, val, seen = Set.new)
   return root if root.val == val
   seen.add(root)
 
   root.edges.each do |edge|
     neighbor = edge.vertices.reject { |v| v == root }.first
-    search_result = dfs(neighbor, val, seen)
-    return search_result if search_result
+    if !seen.include?(neighbor)
+      search_result = dfs_undirected(neighbor, val, seen)
+      return search_result if search_result
+    end
+  end
+
+  nil
+end
+
+def dfs_directed(root, val, seen = Set.new)
+  return root if root.val == val
+  seen.add(root)
+
+  root.out_edges.each do |edge|
+    neighbor = edge.to_vertex
+    if !seen.include?(neighbor)
+      search_result = dfs_directed(neighbor, val, seen)
+      return search_result if search_result
+    end
   end
 
   nil

@@ -1,8 +1,8 @@
 class Vertex
-  attr_accessor :value, :in_edges, :out_edges
+  attr_accessor :val, :in_edges, :out_edges
 
-  def initialize(value)
-    @value = value
+  def initialize(val)
+    @val = val
     @in_edges = []
     @out_edges = []
   end
