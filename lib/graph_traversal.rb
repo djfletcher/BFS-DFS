@@ -1,4 +1,5 @@
 require 'set'
+require 'byebug'
 
 def bfs_undirected(root, val)
   return root if root.val == val
@@ -49,16 +50,25 @@ def dfs_directed(root, val, seen = Set.new)
   nil
 end
 
-def dfs_topological_sort(root, val, seen = Set.new, sorted = [])
-  seen.add(root)
-  root.out_edges.each do |edge|
-    neighbor = edge.to_vertex
-    if !seen.include?(neighbor)
-      dfs_topological_sort(neighbor, val, seen, sorted)
+def dfs_topological_sort(vertices, seen = Set.new, sorted = [])
+  return sorted if vertices.empty?
+
+  vertices.each do |vertex|
+    next if seen.include?(vertex)
+    seen.add(vertex)
+    neighbors = []
+    vertex.out_edges.each do |edge|
+      neighbor = edge.to_vertex
+      if !seen.include?(neighbor)
+        neighbors << neighbor
+      end
     end
+
+    dfs_topological_sort(neighbors, seen, sorted)
+    sorted.unshift(vertex)
   end
 
-  sorted.unshift(root)
+  sorted
 end
 
 
