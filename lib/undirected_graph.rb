@@ -1,3 +1,5 @@
+require 'byebug'
+
 class Vertex
   attr_accessor :val, :edges, :weight
 
@@ -14,6 +16,14 @@ class Edge
 
   def initialize(v1, v2)
     @vertices = [v1, v2]
+    v1.edges << self
+    v2.edges << self
+  end
+
+  def destroy!
+    @vertices.each { |v| v.edges.delete(self) }
+    @vertices = nil
+    self
   end
 end
 
