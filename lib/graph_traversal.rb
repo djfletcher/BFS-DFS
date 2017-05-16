@@ -49,6 +49,19 @@ def dfs_directed(root, val, seen = Set.new)
   nil
 end
 
+def dfs_topological_sort(root, val, seen = Set.new, sorted = [])
+  seen.add(root)
+  root.out_edges.each do |edge|
+    neighbor = edge.to_vertex
+    if !seen.include?(neighbor)
+      dfs_topological_sort(neighbor, val, seen, sorted)
+    end
+  end
+
+  sorted.unshift(root)
+end
+
+
 # For directed graphs only
 def is_cyclic?(vertices)
   levels = []
