@@ -37,16 +37,53 @@ def dfs_undirected(root, val, seen = Set.new)
 end
 
 
-def dfs_directed(root, val, seen = Set.new)
+def dfs_directed_root(root, val, seen = Set.new)
   return root if root.val == val
   seen.add(root)
 
   root.out_edges.each do |edge|
     neighbor = edge.to_vertex
     if !seen.include?(neighbor)
-      search_result = dfs_directed(neighbor, val, seen)
+      search_result = dfs_directed_root(neighbor, val, seen)
       return search_result if search_result
     end
+  end
+
+  nil
+end
+
+
+def bfs_directed_group(vertices, val)
+  seen = Set.new
+  q = Queue.new
+
+  vertices.each do |vertex|
+    return vertex if vertex.val == val
+    seen.include?(vertex) ? next : q.enq(vertex)
+
+    until q.empty?
+      v = q.deq
+      seen.add(v)
+      v.out_edges.each do |edge|
+        neighbor = edge.to_vertex
+        return neighbor if neighbor.val == val
+        q.enq(neighbor) unless seen.include?(neighbor)
+      end
+    end
+  end
+
+  nil
+end
+
+
+def dfs_directed_group(vertices, val, seen = Set.new)
+  return nil if vertices.empty?
+  vertices.each do |vertex|
+    return vertex if vertex.val == val
+    seen.include?(vertex) ? next : seen.add(vertex)
+    neighbors = vertex.out_edges.map(&:to_vertex)
+    search_result = dfs_directed_group(neighbors, val, seen)
+    return search_result if search_result
   end
 
   nil
