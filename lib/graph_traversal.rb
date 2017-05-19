@@ -159,3 +159,75 @@ def is_cyclic?(vertices)
 
   false
 end
+
+
+def is_cyclic?(vertices, seen = Set.new, sorted = [])
+  return false if vertices.empty?
+  vertices.each do |vertex|
+    seen.include?(vertex) ? next : seen.add(vertex)
+    neighbors = []
+    vertex.out_edges.each do |edge|
+      neighbors << edge.to_vertex unless seen.include?(edge.to_vertex)
+    end
+
+    is_cyclic?(neighbors, seen, sorted)
+    if sorted.include?(vertex)
+      return true
+    else
+      sorted.unshift(vertex)
+      return false
+    end
+  end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def bfs(root, val)
+  return root if root.val == val
+  seen = Set.new
+  q = Queue.new
+
+  q.enq(root)
+  until q.empty?
+    v = q.deq
+    seen.add(v)
+    v.out_edges.each do |edge|
+      neighbor = edge.to_vertex
+      return neighbor if neighbor.val == val
+      q.enq(neighbor) unless seen.include?(neighbor)
+    end
+  end
+
+  nil
+end
+
+
+def dfs(root, val, seen = Set.new)
+  return root if root.val == val
+  seen.add(root)
+  root.out_edges.each do |edge|
+    if !seen.include?(edge.to_vertex)
+      search_result = dfs(edge.to_vertex, val, seen)
+      return search_result if search_result
+    end
+  end
+
+  nil
+end
